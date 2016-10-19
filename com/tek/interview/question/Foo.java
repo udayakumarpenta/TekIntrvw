@@ -2,7 +2,7 @@ package com.tek.interview.question;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -161,25 +161,28 @@ class calculator {
 
 				// Calculate the taxes
 				double tax = 0;
-
+				int quantity = r.get(i).getQuantity();
+				double price = r.get(i).getItem().getPrice();
+				double itemQuantPrice = quantity * price;
+				
 				if (r.get(i).getItem().getDescription().contains("imported")) {
-					tax = rounding(r.get(i).getItem().getPrice() * 0.15); // Extra 5% tax on
+					tax = rounding(itemQuantPrice * 0.15); // Extra 5% tax on
 					// imported items
 				} else {
-					tax = rounding(r.get(i).getItem().getPrice() * 0.10);
+					tax = rounding(itemQuantPrice * 0.10);
 				}
 
 				// Calculate the total price
-				/* TODO 
+				/*  
 				 * REVIEW: the quantity is not considered for totalprice calculation
 				 * */
-				double totalprice = r.get(i).getItem().getPrice() + Math.floor(tax);
+				double totalprice = itemQuantPrice + Math.floor(tax);
 
 				// Print out the item's total price
-				/* TODO 
+				/*  
 				 * REVIEW: the quantity is not printed 
 				 * */
-				System.out.println(r.get(i).getItem().getDescription() + ": " + Math.floor(totalprice));
+				System.out.println(quantity + " "+ r.get(i).getItem().getDescription() + ": " + Math.floor(totalprice));
 
 				// Keep a running total
 				totalTax += tax;
@@ -207,7 +210,7 @@ public class Foo {
 
 	public static void main(String[] args) throws Exception {
 
-		Map<String, Order> o = new HashMap<String, Order>();
+		Map<String, Order> o = new LinkedHashMap<String, Order>();
 
 		Order c = new Order();
 
@@ -224,7 +227,8 @@ public class Foo {
 		 * Review : the c.clear() only clears the orderline arraylist inside the Order. 
 		 * The reference is the same in the Map. New Order is required
 		 */
-		c.clear();
+		//c.clear();
+		c = new Order();
 
 		c.add(new OrderLine(new Item("imported box of chocolate", 10), 1));
 		c.add(new OrderLine(new Item("imported bottle of perfume", (float) 47.50), 1));
@@ -232,7 +236,8 @@ public class Foo {
 		o.put("Order 2", c);
 
 		// Reuse cart for an other order
-		c.clear();
+		//c.clear();
+		c = new Order();
 
 		c.add(new OrderLine(new Item("Imported bottle of perfume", (float) 27.99), 1));
 		c.add(new OrderLine(new Item("bottle of perfume", (float) 18.99), 1));
