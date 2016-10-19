@@ -166,10 +166,10 @@ class calculator {
 				double itemQuantPrice = quantity * price;
 				
 				if (r.get(i).getItem().getDescription().contains("imported")) {
-					tax = rounding(itemQuantPrice * 0.15); // Extra 5% tax on
+					tax = (itemQuantPrice * 0.15); // Extra 5% tax on
 					// imported items
 				} else {
-					tax = rounding(itemQuantPrice * 0.10);
+					tax = (itemQuantPrice * 0.10);
 				}
 
 				// Calculate the total price
@@ -186,7 +186,7 @@ class calculator {
 
 				// Keep a running total
 				totalTax += tax;
-				total += r.get(i).getItem().getPrice();
+				total += totalprice;
 			}
 
 			// Print out the total taxes
@@ -195,7 +195,7 @@ class calculator {
 			 * REVIEW :  Total is total of each total price(quantity*item price including tax) minus the total tax
 			 * e.g: 13.74 + 16.49 +  0.94 - 2.84 = 28.33 
 			 * */
-			total = total + totalTax;
+			total = total - totalTax;
 
 			// Print out the total amount
 			System.out.println("Total: " + Math.floor(total * 100) / 100);
