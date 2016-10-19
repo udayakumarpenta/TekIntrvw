@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 /* ****************************************************************************************
@@ -80,8 +81,10 @@ class OrderLine {
 			throw new Exception("Item is NULL");
 		}
 		assert quantity > 0;
-		item = item;
-		quantity = quantity;
+		/*REVIEW :  item & quantity should be assigned to the object property variables: START*/
+		this.item = item;
+		this.quantity = quantity;
+		/*REVIEW :  item & quantity should be assigned to the object property variables: END*/
 	}
 
 	public Item getItem() {
@@ -95,7 +98,9 @@ class OrderLine {
 
 class Order {
 
-	private List<OrderLine> orderLines;
+	/*REVIEW :  orderLines should be instantiated before using: START*/
+	private List<OrderLine> orderLines = new ArrayList<OrderLine>();
+	/*REVIEW :  orderLines should be instantiated before using: END*/
 
 	public void add(OrderLine o) throws Exception {
 		if (o == null) {
@@ -137,7 +142,10 @@ class calculator {
 		// Iterate through the orders
 		for (Map.Entry<String, Order> entry : o.entrySet()) {
 			System.out.println("*******" + entry.getKey() + "*******");
-			grandtotal = 0;
+			/* 
+			 * Review : the grandtotal is already initialized and reinitialize in loop will assign a wrong value.
+			 */
+			//grandtotal = 0;
 
 			Order r = entry.getValue();
 
@@ -145,7 +153,11 @@ class calculator {
 			double total = 0;
 
 			// Iterate through the items in the order
-			for (int i = 0; i <= r.size(); i++) {
+			/* 
+			 * Review : the loop index should end before r.size, 
+			 * change from i<=r.size() to i < r.size()
+			 */
+			for (int i = 0; i < r.size(); i++) {
 
 				// Calculate the taxes
 				double tax = 0;
@@ -158,9 +170,15 @@ class calculator {
 				}
 
 				// Calculate the total price
+				/* TODO 
+				 * REVIEW: the quantity is not considered for totalprice calculation
+				 * */
 				double totalprice = r.get(i).getItem().getPrice() + Math.floor(tax);
 
 				// Print out the item's total price
+				/* TODO 
+				 * REVIEW: the quantity is not printed 
+				 * */
 				System.out.println(r.get(i).getItem().getDescription() + ": " + Math.floor(totalprice));
 
 				// Keep a running total
@@ -170,7 +188,10 @@ class calculator {
 
 			// Print out the total taxes
 			System.out.println("Sales Tax: " + Math.floor(totalTax));
-
+			/* TODO
+			 * REVIEW :  Total is total of each total price(quantity*item price including tax) minus the total tax
+			 * e.g: 13.74 + 16.49 +  0.94 - 2.84 = 28.33 
+			 * */
 			total = total + totalTax;
 
 			// Print out the total amount
@@ -199,6 +220,10 @@ public class Foo {
 		o.put("Order 1", c);
 
 		// Reuse cart for an other order
+		/* TODO
+		 * Review : the c.clear() only clears the orderline arraylist inside the Order. 
+		 * The reference is the same in the Map. New Order is required
+		 */
 		c.clear();
 
 		c.add(new OrderLine(new Item("imported box of chocolate", 10), 1));
